@@ -6,7 +6,6 @@ export default function NewScan() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Redirect if not logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) window.location.href = "/login";
