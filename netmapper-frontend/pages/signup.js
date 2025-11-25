@@ -26,7 +26,7 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://netmapper.onrender.com/api/auth/signup", formData);
+      await axios.post("https://netmapper-production.up.railway.app/api/auth/signup", formData);
       setMessage("Signup successful! Redirecting to login...");
       setTimeout(() => (window.location.href = "/login"), 1500);
       setFormData({ name: "", email: "", password: "" });

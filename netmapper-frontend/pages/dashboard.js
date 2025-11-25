@@ -15,7 +15,7 @@ export default function Dashboard() {
 
 
     axios
-      .get("https://netmapper.onrender.com/api/users/me", {
+      .get("https://netmapper-production.up.railway.app/api/users/me", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUser(res.data.user))
@@ -26,7 +26,7 @@ export default function Dashboard() {
 
 
     axios
-      .get("https://netmapper.onrender.com/api/scans/count", {
+      .get("https://netmapper-production.up.railway.app/api/scans/count", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setScanCount(res.data.count))

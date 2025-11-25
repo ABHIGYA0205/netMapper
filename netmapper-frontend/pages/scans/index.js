@@ -22,7 +22,7 @@ export default function ScanList() {
     const token = localStorage.getItem("token");
 
     axios
-      .get("https://netmapper.onrender.com/api/scans", {
+      .get("https://netmapper-production.up.railway.app/api/scans", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

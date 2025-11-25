@@ -26,7 +26,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://netmapper.onrender.com/api/auth/login", formData);
+      const res = await axios.post("https://netmapper-production.up.railway.app/api/auth/login", formData);
       localStorage.setItem("token", res.data.token);
       setMessage(" Login successful! Redirecting...");
       setTimeout(() => (window.location.href = "/dashboard"), 1500);

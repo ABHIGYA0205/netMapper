@@ -21,7 +21,7 @@ export default function NewScan() {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        "https://netmapper.onrender.com/api/scans/run",
+        "https://netmapper-production.up.railway.app/api/scans/run",
         { target },
         { headers: { Authorization: `Bearer ${token}` } }
       );
