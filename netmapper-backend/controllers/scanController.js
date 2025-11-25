@@ -23,7 +23,8 @@ exports.runScan = async (req, res) => {
 
   const safeTarget = target.replace(/[^a-zA-Z0-9\.\-\:]/g, "");
 
-  const cmd = `nmap -T4 -F --top-ports 50 ${safeTarget}`;
+const cmd = `nmap -sT -Pn -F --top-ports 50 ${safeTarget}`;
+
 
   exec(cmd, { timeout: 15000 }, async (err, stdout, stderr) => {
     if (err) {
