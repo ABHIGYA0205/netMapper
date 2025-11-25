@@ -1,5 +1,8 @@
+[build]
+builder = "ubuntu"
+
 [phases.setup]
-nixPkgs = ["nmap"]
+aptPkgs = ["nmap"]
 
 [phases.install]
 cmds = ["npm install"]
