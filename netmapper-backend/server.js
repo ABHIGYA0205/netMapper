@@ -14,7 +14,7 @@ app.use(morgan("dev"));
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://net-mapper-kbeq.vercel.app"
+ "https://net-mapper.vercel.app" 
 ];
 
 app.use((req, res, next) => {
