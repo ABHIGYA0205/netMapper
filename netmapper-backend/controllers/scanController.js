@@ -104,11 +104,19 @@ exports.deleteScan = async (req, res) => {
 
 exports.deleteAllScans = async (req, res) => {
   try {
-    await prisma.scan.deleteMany({
-      where: { userId: req.user.id }
-    });
+    const userId = req.user.id;
 
-    res.json({ message: "All scans deleted" });
+    const result = await prisma.scan.deleteMany({
+      where: {
+        userId: {
+          equals: userId  
+        }
+      }
+    });
+    res.json({
+      message: "All scans deleted",
+      deleted: result.count
+    });
 
   } catch (err) {
     console.error("Delete all error:", err);
