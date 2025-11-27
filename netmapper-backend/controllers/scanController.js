@@ -27,21 +27,20 @@ exports.runScan = async (req, res) => {
 
 switch (scanType) {
   case "full":
-    cmd = `nmap --unprivileged -sT -T4 -p- ${safeTarget}`;
+    cmd = `nmap --unprivileged -sT -T4 -p 1-65535 ${safeTarget}`;
     break;
 
   case "service":
-    cmd = `nmap --unprivileged -sT -T4 -sV --top-ports 100 ${safeTarget}`;
+    cmd = `nmap --unprivileged -sT -T4 -sV --version-light --top-ports 200 ${safeTarget}`;
     break;
 
   case "detailed":
-    cmd = `nmap --unprivileged -sT -T4 -sV -A ${safeTarget}`;
+    cmd = `nmap --unprivileged -sT -T4 -sV --version-light --top-ports 300 ${safeTarget}`;
     break;
 
   default:
     cmd = `nmap --unprivileged -sT -T4 --top-ports 50 ${safeTarget}`;
 }
-
 
   console.log("Running Nmap:", cmd);
 
