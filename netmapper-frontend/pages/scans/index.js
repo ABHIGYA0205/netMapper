@@ -11,7 +11,6 @@ export default function ScanList() {
 
   const API = "https://netmapper-production.up.railway.app";
 
-  // Modal Controls
   const openModal = (scan) => {
     setModalScan(scan);
     setShowModal(true);
@@ -24,7 +23,6 @@ export default function ScanList() {
     document.body.style.overflow = "auto";
   };
 
-  // LOAD all scans
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -39,7 +37,6 @@ export default function ScanList() {
       .catch((err) => console.error("Error loading scans", err));
   }, []);
 
-  // SEARCH + SORT LOGIC
   useEffect(() => {
     let list = [...scans];
 
@@ -63,7 +60,6 @@ export default function ScanList() {
     setFilteredScans(list);
   }, [search, sortType, scans]);
 
-  // DELETE one scan
   const deleteScan = async (id) => {
     if (!confirm("Delete this scan?")) return;
 
@@ -76,23 +72,9 @@ export default function ScanList() {
     setScans((prev) => prev.filter((s) => s.id !== id));
   };
 
-  // DELETE all scans
-  const deleteAll = async () => {
-    if (!confirm("⚠ Delete ALL scans?")) return;
-
-    const token = localStorage.getItem("token");
-
-    await axios.delete(`${API}/api/scans/delete-all`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    setScans([]);
-  };
-
   return (
     <div className="dashboard-container">
 
-      {/* NAVBAR */}
       <nav className="navbar">
         <h1>Your Scans</h1>
         <div>
@@ -105,7 +87,6 @@ export default function ScanList() {
         </div>
       </nav>
 
-      {/* Search + Sort + Delete All */}
       <div className="dashboard-content">
 
         <div className="filter-bar">
@@ -122,10 +103,6 @@ export default function ScanList() {
             <option value="az">A → Z</option>
             <option value="za">Z → A</option>
           </select>
-
-          <button className="deleteAllBtn" onClick={deleteAll}>
-            Delete All
-          </button>
         </div>
 
         <h2>Scan History</h2>
@@ -151,7 +128,6 @@ export default function ScanList() {
         )}
       </div>
 
-      {/* MODAL */}
       {showModal && modalScan && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
@@ -166,7 +142,6 @@ export default function ScanList() {
         </div>
       )}
 
-      {/* Extra CSS for hacker look */}
       <style jsx>{`
         .filter-bar {
           display: flex;
@@ -180,14 +155,6 @@ export default function ScanList() {
           border: 1px solid #00ff88;
           background: black;
           color: #00ff88;
-        }
-
-        .deleteAllBtn {
-          background: #ff0033;
-          border: none;
-          padding: 10px 15px;
-          color: white;
-          cursor: pointer;
         }
 
         .terminal-card {

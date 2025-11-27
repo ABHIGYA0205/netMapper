@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { verifyToken } = require("../middleware/authMiddleware");
 const prisma = require("../prisma/client");
-const { runScan, getUserScans ,deleteScan,deleteAllScans} = require("../controllers/scanController");
+const { runScan, getUserScans ,deleteScan} = require("../controllers/scanController");
 
 router.get("/", verifyToken, getUserScans);
 
@@ -20,7 +20,7 @@ router.get("/count", verifyToken, async (req, res) => {
   }
 });
 router.delete("/:id", verifyToken, deleteScan);
-router.delete("/delete-all", verifyToken, deleteAllScans);
+
 
 
 module.exports = router;
