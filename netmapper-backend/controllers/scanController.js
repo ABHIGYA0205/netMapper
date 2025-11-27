@@ -85,6 +85,7 @@ exports.deleteScan = async (req, res) => {
       where: { id: scanId }
     });
 
+    // scan must exist + user must own it
     if (!scan || scan.userId !== req.user.id) {
       return res.status(403).json({ message: "Not allowed" });
     }
@@ -96,7 +97,7 @@ exports.deleteScan = async (req, res) => {
     res.json({ message: "Scan deleted" });
 
   } catch (err) {
-    console.error("Delete error:", err);
+    console.error("Delete scan error:", err);
     res.status(500).json({ message: "Failed to delete scan" });
   }
 };
@@ -114,4 +115,3 @@ exports.deleteAllScans = async (req, res) => {
     res.status(500).json({ message: "Failed to delete all scans" });
   }
 };
-

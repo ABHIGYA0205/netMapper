@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { verifyToken } = require("../middleware/authMiddleware");
 const prisma = require("../prisma/client");
-const { runScan, getUserScans } = require("../controllers/scanController");
+const { runScan, getUserScans ,deleteScan,deleteAllScans} = require("../controllers/scanController");
 
 router.get("/", verifyToken, getUserScans);
 
