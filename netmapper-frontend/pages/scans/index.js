@@ -3,9 +3,15 @@ import axios from "axios";
 
 export default function ScanList() {
   const [scans, setScans] = useState([]);
+  const [filteredScans, setFilteredScans] = useState([]);
+  const [search, setSearch] = useState("");
+  const [sortType, setSortType] = useState("newest");
   const [modalScan, setModalScan] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  const API = "https://netmapper-production.up.railway.app";
+
+  // Modal Controls
   const openModal = (scan) => {
     setModalScan(scan);
     setShowModal(true);
@@ -18,23 +24,75 @@ export default function ScanList() {
     document.body.style.overflow = "auto";
   };
 
+  // LOAD all scans
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     axios
-      .get("https://netmapper-production.up.railway.app/api/scans", {
+      .get(`${API}/api/scans`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
         setScans(res.data.scans);
+        setFilteredScans(res.data.scans);
       })
-      .catch((err) => {
-        console.error("Error loading scans", err);
-      });
+      .catch((err) => console.error("Error loading scans", err));
   }, []);
+
+  // SEARCH + SORT LOGIC
+  useEffect(() => {
+    let list = [...scans];
+
+    list = list.filter((scan) =>
+      scan.target.toLowerCase().includes(search.toLowerCase())
+    );
+
+    if (sortType === "newest") {
+      list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+    if (sortType === "oldest") {
+      list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    }
+    if (sortType === "az") {
+      list.sort((a, b) => a.target.localeCompare(b.target));
+    }
+    if (sortType === "za") {
+      list.sort((a, b) => b.target.localeCompare(a.target));
+    }
+
+    setFilteredScans(list);
+  }, [search, sortType, scans]);
+
+  // DELETE one scan
+  const deleteScan = async (id) => {
+    if (!confirm("Delete this scan?")) return;
+
+    const token = localStorage.getItem("token");
+
+    await axios.delete(`${API}/api/scans/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    setScans((prev) => prev.filter((s) => s.id !== id));
+  };
+
+  // DELETE all scans
+  const deleteAll = async () => {
+    if (!confirm("⚠ Delete ALL scans?")) return;
+
+    const token = localStorage.getItem("token");
+
+    await axios.delete(`${API}/api/scans/delete-all`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    setScans([]);
+  };
 
   return (
     <div className="dashboard-container">
+
+      {/* NAVBAR */}
       <nav className="navbar">
         <h1>Your Scans</h1>
         <div>
@@ -47,44 +105,120 @@ export default function ScanList() {
         </div>
       </nav>
 
+      {/* Search + Sort + Delete All */}
       <div className="dashboard-content">
+
+        <div className="filter-bar">
+          <input
+            type="text"
+            placeholder="Search target..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="az">A → Z</option>
+            <option value="za">Z → A</option>
+          </select>
+
+          <button className="deleteAllBtn" onClick={deleteAll}>
+            Delete All
+          </button>
+        </div>
+
         <h2>Scan History</h2>
 
-        {scans.length === 0 ? (
-          <p>No scans yet.</p>
+        {filteredScans.length === 0 ? (
+          <p>No scans found.</p>
         ) : (
           <div className="stats scans-grid">
-            {scans.map((scan) => (
-              <div key={scan.id} className="card">
-                <h3>{scan.target}</h3>
+            {filteredScans.map((scan) => (
+              <div key={scan.id} className="card terminal-card">
+                <h3>➜ {scan.target}</h3>
                 <p>{new Date(scan.createdAt).toLocaleString()}</p>
 
-                <button onClick={() => openModal(scan)}>View Result</button>
+                <div className="card-btns">
+                  <button onClick={() => openModal(scan)}>View</button>
+                  <button className="del" onClick={() => deleteScan(scan.id)}>
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         )}
       </div>
 
-
+      {/* MODAL */}
       {showModal && modalScan && (
         <div className="modal-overlay" onClick={closeModal}>
-          <div
-            className="modal-box"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
             <h2 style={{ color: "#00ff88" }}>
               Scan Result: {modalScan.target}
             </h2>
 
             <pre className="modal-output">{modalScan.result}</pre>
 
-            <button className="close-btn" onClick={closeModal}>
-              Close
-            </button>
+            <button className="close-btn" onClick={closeModal}>Close</button>
           </div>
         </div>
       )}
+
+      {/* Extra CSS for hacker look */}
+      <style jsx>{`
+        .filter-bar {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 20px;
+        }
+
+        .filter-bar input,
+        .filter-bar select {
+          padding: 10px;
+          border: 1px solid #00ff88;
+          background: black;
+          color: #00ff88;
+        }
+
+        .deleteAllBtn {
+          background: #ff0033;
+          border: none;
+          padding: 10px 15px;
+          color: white;
+          cursor: pointer;
+        }
+
+        .terminal-card {
+          background: #0c0c0c;
+          border: 1px solid #00ff88;
+          padding: 15px;
+          transition: 0.2s;
+          box-shadow: none;
+        }
+
+        .terminal-card:hover {
+          box-shadow: 0 0 8px #00ff88;
+        }
+
+        .card-btns {
+          margin-top: 10px;
+          display: flex;
+          gap: 10px;
+        }
+
+        .card-btns button {
+          padding: 6px 12px;
+          cursor: pointer;
+          border: none;
+        }
+
+        .del {
+          background: #ff0044;
+          color: white;
+        }
+      `}</style>
     </div>
   );
 }

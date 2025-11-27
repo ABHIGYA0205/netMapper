@@ -61,7 +61,7 @@ switch (scanType) {
       return res.status(500).json({ message: "Nmap scan failed", error: stderr });
     }
 
-    // Save successful scan
+
     const scan = await prisma.scan.create({
       data: {
         userId: req.user.id,
@@ -77,3 +77,41 @@ switch (scanType) {
     });
   });
 };
+exports.deleteScan = async (req, res) => {
+  try {
+    const scanId = parseInt(req.params.id);
+
+    const scan = await prisma.scan.findUnique({
+      where: { id: scanId }
+    });
+
+    if (!scan || scan.userId !== req.user.id) {
+      return res.status(403).json({ message: "Not allowed" });
+    }
+
+    await prisma.scan.delete({
+      where: { id: scanId }
+    });
+
+    res.json({ message: "Scan deleted" });
+
+  } catch (err) {
+    console.error("Delete error:", err);
+    res.status(500).json({ message: "Failed to delete scan" });
+  }
+};
+
+exports.deleteAllScans = async (req, res) => {
+  try {
+    await prisma.scan.deleteMany({
+      where: { userId: req.user.id }
+    });
+
+    res.json({ message: "All scans deleted" });
+
+  } catch (err) {
+    console.error("Delete all error:", err);
+    res.status(500).json({ message: "Failed to delete all scans" });
+  }
+};
+

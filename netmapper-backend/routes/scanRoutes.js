@@ -19,6 +19,8 @@ router.get("/count", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Could not get scan count" });
   }
 });
+router.delete("/:id", verifyToken, deleteScan);
+router.delete("/delete-all", verifyToken, deleteAllScans);
 
 
 module.exports = router;

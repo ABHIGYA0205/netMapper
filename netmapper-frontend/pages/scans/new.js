@@ -76,7 +76,7 @@ export default function NewScan() {
             border: "1px solid #00ff8899",
           }}
         >
-          {/* Target input */}
+
           <input
             type="text"
             placeholder="Enter IP or Domain"
@@ -103,7 +103,7 @@ export default function NewScan() {
             <option value="detailed">🔍 Detailed Scan</option>
           </select>
 
-          {/* Scan descriptions */}
+
           <div
             style={{
               background: "#111",
@@ -127,7 +127,7 @@ export default function NewScan() {
             {scanType === "detailed" && (
               <p>
                 Version detection + scripts + traceroute.  
-                <br />*May take longer on Railway*
+                <br />*May take longer*
               </p>
             )}
           </div>
@@ -137,7 +137,6 @@ export default function NewScan() {
           </button>
         </form>
 
-        {/* Message */}
         {message && (
           <p
             style={{
