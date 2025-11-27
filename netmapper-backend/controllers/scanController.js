@@ -79,13 +79,13 @@ switch (scanType) {
 };
 exports.deleteScan = async (req, res) => {
   try {
-    const scanId = parseInt(req.params.id);
+    const scanId =(req.params.id);
 
     const scan = await prisma.scan.findUnique({
       where: { id: scanId }
     });
 
-    // scan must exist + user must own it
+
     if (!scan || scan.userId !== req.user.id) {
       return res.status(403).json({ message: "Not allowed" });
     }
