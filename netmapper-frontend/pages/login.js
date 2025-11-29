@@ -1,13 +1,12 @@
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-
 
 export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-    useEffect(() => {
+  useEffect(() => {
     const script = document.createElement("script");
     script.src = "/matrix.js";
     script.async = true;
@@ -26,7 +25,10 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://netmapper-production.up.railway.app/api/auth/login", formData);
+      const res = await axios.post(
+        "https://netmapper-production.up.railway.app/api/auth/login",
+        formData
+      );
       localStorage.setItem("token", res.data.token);
       setMessage(" Login successful! Redirecting...");
       setTimeout(() => (window.location.href = "/dashboard"), 1500);
@@ -37,7 +39,6 @@ export default function Login() {
 
   return (
     <>
-
       <div className="animated-bg">
         <div className="blob blob-1"></div>
         <div className="blob blob-2"></div>
@@ -45,7 +46,6 @@ export default function Login() {
         <div className="blob blob-4"></div>
       </div>
       <canvas id="matrix"></canvas>
-
 
       <div className="auth-container">
         <div className="auth-box">
@@ -69,6 +69,15 @@ export default function Login() {
               required
             />
             <button type="submit">Login</button>
+            <p>
+              Don’t have an account?{" "}
+              <a
+                href="/signup"
+                style={{ color: "#00ff88", textDecoration: "underline" }}
+              >
+                Create one
+              </a>
+            </p>
           </form>
 
           {message && <p className="message">{message}</p>}

@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function Signup() {
@@ -7,7 +7,7 @@ export default function Signup() {
     email: "",
     password: "",
   });
-    useEffect(() => {
+  useEffect(() => {
     const script = document.createElement("script");
     script.src = "/matrix.js";
     script.async = true;
@@ -26,7 +26,10 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://netmapper-production.up.railway.app/api/auth/signup", formData);
+      await axios.post(
+        "https://netmapper-production.up.railway.app/api/auth/signup",
+        formData
+      );
       setMessage("Signup successful! Redirecting to login...");
       setTimeout(() => (window.location.href = "/login"), 1500);
       setFormData({ name: "", email: "", password: "" });
@@ -45,7 +48,6 @@ export default function Signup() {
         <div className="blob blob-3"></div>
         <div className="blob blob-4"></div>
       </div>
-
 
       <div className="auth-container">
         <div className="auth-box">
@@ -76,6 +78,15 @@ export default function Signup() {
               required
             />
             <button type="submit">Sign Up</button>
+            <p>
+              Already have an account?{" "}
+              <a
+                href="/login"
+                style={{ color: "#00ff88", textDecoration: "underline" }}
+              >
+                Login
+              </a>
+            </p>
           </form>
 
           {message && <p className="message">{message}</p>}

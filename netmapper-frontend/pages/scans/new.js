@@ -95,12 +95,13 @@ export default function NewScan() {
               padding: "10px",
               marginBottom: "20px",
               borderRadius: "6px",
+              backgroundColor:'grey'
             }}
           >
-            <option value="quick">⚡ Quick Scan (fastest)</option>
-            <option value="full">📡 Full TCP Scan (all ports)</option>
-            <option value="service">🧪 Service Detection</option>
-            <option value="detailed">🔍 Detailed Scan</option>
+            <option value="quick"> Quick Scan (fastest)</option>
+            <option value="full"> Full TCP Scan (all ports)</option>
+            <option value="service"> Service Detection</option>
+            <option value="detailed"> Detailed Scan</option>
           </select>
 
 

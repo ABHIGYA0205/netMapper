@@ -179,6 +179,7 @@ export default function ScanList() {
           padding: 6px 12px;
           cursor: pointer;
           border: none;
+          border-radius:10px
         }
 
         .del {

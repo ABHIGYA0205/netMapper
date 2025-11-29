@@ -13,7 +13,6 @@ router.get("/count", verifyToken, async (req, res) => {
     const count = await prisma.scan.count({
       where: { userId: req.user.id },
     });
-
     res.json({ count });
   } catch (err) {
     res.status(500).json({ message: "Could not get scan count" });

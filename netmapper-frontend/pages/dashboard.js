@@ -37,8 +37,45 @@ export default function Dashboard() {
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
+  function Loader() {
+  return (
+    <div style={styles.loaderContainer}>
+      <div style={styles.spinner}></div>
+      <p style={{ marginTop: "10px", color: "#00ff88", fontSize: "18px" }}>
+        Loading your Dashboard...
+      </p>
 
-  if (!user) return <p>Loading...</p>;
+      <style jsx>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+const styles = {
+  loaderContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "60vh",
+  },
+  spinner: {
+    width: "60px",
+    height: "60px",
+    border: "5px solid #111",
+    borderTop: "5px solid #00ff88",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
+  },
+};
+
+
+if (!user) return <Loader />;
+
 
   return (
     <>
@@ -54,7 +91,7 @@ export default function Dashboard() {
         <nav className="navbar">
           <h1>NetMapper Dashboard</h1>
           <div>
-            <button onClick={() => (window.location.href = "/dashboard")}>
+            <button onClick={() => (window.location.href = "/")}>
               Home
             </button>
             <button onClick={() => (window.location.href = "/scans")}>
