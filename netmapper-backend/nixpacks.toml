@@ -1,11 +1,11 @@
-[build]
-builder = "ubuntu"
-
 [phases.setup]
 aptPkgs = ["nmap"]
 
 [phases.install]
-cmds = ["npm install"]
+cmds = [
+  "npm install",
+  "npx prisma generate"
+]
 
 [phases.start]
-cmd = "node server.js"
+cmd = "npm start"
