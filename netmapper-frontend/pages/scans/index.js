@@ -8,8 +8,13 @@ export default function ScanList() {
   const [sortType, setSortType] = useState("newest");
   const [modalScan, setModalScan] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const limit = 8; // scans per page
+
 
   const API = "https://netmapper-production.up.railway.app";
+  // const API = "http://localhost:7002";
 
   const openModal = (scan) => {
     setModalScan(scan);
@@ -23,19 +28,25 @@ export default function ScanList() {
     document.body.style.overflow = "auto";
   };
 
-  useEffect(() => {
+  const fetchScans = () => {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`${API}/api/scans`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      .get(
+        `${API}/api/scans?page=${page}&limit=${limit}&search=${search}&sort=${sortType}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then((res) => {
         setScans(res.data.scans);
-        setFilteredScans(res.data.scans);
+        setPages(res.data.pages);
       })
       .catch((err) => console.error("Error loading scans", err));
-  }, []);
+  };
+
+
+  useEffect(() => {
+    fetchScans();
+  }, [page, search, sortType]);
 
   useEffect(() => {
     let list = [...scans];
@@ -71,6 +82,35 @@ export default function ScanList() {
 
     setScans((prev) => prev.filter((s) => s.id !== id));
   };
+const editScan = async (id) => {
+  const newTarget = prompt("Enter new name for this scan:");
+
+  if (!newTarget) return;
+
+  const token = localStorage.getItem("token");
+
+  const res = await axios.put(`${API}/api/scans/${id}`, 
+    { newTarget },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+
+  setScans(prev => prev.map(s => s.id === id ? res.data.scan : s));
+};
+
+
+  const deleteAll = async () => {
+  if (!confirm("Delete ALL scans? This cannot be undone.")) return;
+
+  const token = localStorage.getItem("token");
+
+  await axios.delete(`${API}/api/scans/all`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  setScans([]);
+  setFilteredScans([]);
+};
+
 
   return (
     <div className="dashboard-container">
@@ -90,6 +130,7 @@ export default function ScanList() {
       <div className="dashboard-content">
 
         <div className="filter-bar">
+
           <input
             type="text"
             placeholder="Search target..."
@@ -103,6 +144,11 @@ export default function ScanList() {
             <option value="az">A → Z</option>
             <option value="za">Z → A</option>
           </select>
+
+
+          <button className="deleteAllBtn" onClick={deleteAll}>
+          Delete All
+        </button>
         </div>
 
         <h2>Scan History</h2>
@@ -118,15 +164,19 @@ export default function ScanList() {
 
                 <div className="card-btns">
                   <button onClick={() => openModal(scan)}>View</button>
-                  <button className="del" onClick={() => deleteScan(scan.id)}>
-                    Delete
-                  </button>
+                  <button className="del" onClick={() => deleteScan(scan.id)}>Delete</button>
+                  <button className="edit" onClick={() => editScan(scan.id)}>Edit</button>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+        <div className="pagination">
+          <button disabled={page === 1} onClick={() => setPage(page - 1)}>Prev</button>
+          <span>Page {page} of {pages}</span>
+          <button disabled={page === pages} onClick={() => setPage(page + 1)}>Next</button>
+        </div>
 
       {showModal && modalScan && (
         <div className="modal-overlay" onClick={closeModal}>
@@ -151,7 +201,7 @@ export default function ScanList() {
 
         .filter-bar input,
         .filter-bar select {
-          padding: 10px;
+          padding: 11px;
           border: 1px solid #00ff88;
           background: black;
           color: #00ff88;
@@ -160,7 +210,7 @@ export default function ScanList() {
         .terminal-card {
           background: #0c0c0c;
           border: 1px solid #00ff88;
-          padding: 15px;
+          padding: 20px;
           transition: 0.2s;
           box-shadow: none;
         }
@@ -172,7 +222,8 @@ export default function ScanList() {
         .card-btns {
           margin-top: 10px;
           display: flex;
-          gap: 10px;
+          justify-content:center;
+          gap: 8px;
         }
 
         .card-btns button {
@@ -185,6 +236,21 @@ export default function ScanList() {
         .del {
           background: #ff0044;
           color: white;
+        }
+          .deleteAllBtn {
+          background: #ff0033;
+          border: none;
+          padding: 10px 15px;
+          color: white;
+          cursor: pointer;
+          border-radius: 8px;
+  }
+           .pagination {
+          margin-top: 20px;
+          display: flex;
+          gap: 20px;
+          justify-content: center;
+          color: #00ff88;
         }
       `}</style>
     </div>

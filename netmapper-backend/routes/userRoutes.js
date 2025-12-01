@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { verifyToken } = require("../middleware/authMiddleware");
-const prisma = require("../config/prisma");
+const prisma = require("../prisma/client");
 
 router.get("/me", verifyToken, async (req, res) => {
   try {
@@ -26,5 +26,22 @@ router.get("/me", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+router.put("/update", verifyToken, async (req, res) => {
+  try {
+    const { name, email } = req.body;
+
+    const updatedUser = await prisma.user.update({
+      where: { id: req.user.id },
+      data: { name, email }
+    });
+
+    res.json({ message: "Profile updated", user: updatedUser });
+  } catch (err) {
+    console.error("Update profile error:", err);
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+});
+
 
 module.exports = router;

@@ -1,20 +1,6 @@
 const prisma = require("../prisma/client");
 const { exec } = require("child_process");
 
-exports.getUserScans = async (req, res) => {
-  try {
-    const scans = await prisma.scan.findMany({
-      where: { userId: req.user.id },
-      orderBy: { createdAt: "desc" },
-    });
-
-    res.json({ scans });
-  } catch (err) {
-    console.error("Scan fetch error:", err);
-    res.status(500).json({ message: "Could not load scans", error: err });
-  }
-};
-
 exports.runScan = async (req, res) => {
   const { target, scanType } = req.body;
 
@@ -101,4 +87,41 @@ exports.deleteScan = async (req, res) => {
     res.status(500).json({ message: "Failed to delete scan" });
   }
 };
+
+exports.deleteAllScans = async (req, res) => {
+  try {
+    await prisma.scan.deleteMany({
+      where: { userId: req.user.id }
+    });
+
+    res.json({ message: "All scans deleted" });
+
+  } catch (err) {
+    console.error("Delete all error:", err);
+    res.status(500).json({ message: "Failed to delete all scans" });
+  }
+};
+
+exports.updateScan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { newTarget } = req.body;
+
+    if (!newTarget) {
+      return res.status(400).json({ message: "New target name required" });
+    }
+
+    const updated = await prisma.scan.update({
+      where: { id },
+      data: { target: newTarget }
+    });
+
+    res.json({ message: "Scan updated", scan: updated });
+
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(500).json({ message: "Failed to update scan" });
+  }
+};
+
 

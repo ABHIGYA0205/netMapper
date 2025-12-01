@@ -7,9 +7,6 @@ export default function Home() {
         <div className="logo">NetMapper</div>
 
         <div className="nav-links">
-
-
-
           <button onClick={() => (window.location.href = "/login")}>
             Login
           </button>
@@ -108,7 +105,6 @@ export default function Home() {
         </a>
       </footer>
 
-      {/* CSS */}
       <style jsx>{`
       
         .page {
@@ -117,7 +113,6 @@ export default function Home() {
           font-family: monospace;
         }
 
-        /* NAVBAR */
         .navbar {
           display: flex;
           justify-content: space-between;
@@ -149,7 +144,6 @@ export default function Home() {
           font-weight: bold;
         }
 
-        /* HERO */
         .hero {
           text-align: center;
           padding: 120px 20px;
@@ -178,7 +172,6 @@ export default function Home() {
           border-radius:10px
         }
 
-        /* FEATURES */
         .features {
           padding: 80px 40px;
           text-align: center;
@@ -224,7 +217,6 @@ export default function Home() {
           margin-bottom: 10px;
         }
 
-        /* ABOUT */
         .about {
           padding: 80px 40px;
           text-align: center;
@@ -235,7 +227,6 @@ export default function Home() {
           opacity: 0.8;
         }
 
-        /* FOOTER */
         footer {
           padding: 30px;
           text-align: center;

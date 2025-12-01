@@ -97,6 +97,9 @@ if (!user) return <Loader />;
             <button onClick={() => (window.location.href = "/scans")}>
               Scans
             </button>
+          <button onClick={() => window.location.href = "/profile"}>
+            Edit Profile
+          </button>
             <button onClick={logout}>Logout</button>
           </div>
         </nav>
