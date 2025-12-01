@@ -80,17 +80,18 @@ Database (MongoDB)
 
 ## ## 🔌 **6. API Overview**
 
-| Endpoint | Method | Description | Access |
-|----------|--------|-------------|--------|
-| `/api/auth/signup` | POST | Register a new user | Public |
-| `/api/auth/login` | POST | Authenticate user & issue JWT | Public |
-| `/api/scans` | GET | Fetch all scans (supports search/sort/filter/pagination) | Authenticated |
-| `/api/scans` | POST | Start a new Nmap scan | Admin |
-| `/api/scans/:id` | GET | Fetch details of a specific scan | Authenticated |
-| `/api/scans/:id` | PUT | Update scan info (tags, notes, etc.) | Admin |
-| `/api/scans/:id` | DELETE | Delete a scan record | Admin |
-| `/api/hosts` | GET | Fetch all discovered hosts with filters | Authenticated |
-| `/api/alerts` | GET | View alerts generated between scans | Authenticated |
+| **Endpoint**            | **Method** | **Description**                                          | **Access**    |
+| ----------------------- | ---------- | -------------------------------------------------------- | ------------- |
+| **`/api/auth/signup`**  | POST       | Register a new user                                      | Public        |
+| **`/api/auth/login`**   | POST       | Login user & return JWT token                            | Public        |
+| **`/api/users/me`**     | GET        | Get logged-in user's profile                             | Authenticated |
+| **`/api/users/update`** | PUT        | Update user profile (name/email)                         | Authenticated |
+| **`/api/scans`**        | GET        | Fetch user scans (**supports search, sort, pagination**) | Authenticated |
+| **`/api/scans/run`**    | POST       | Run an Nmap scan (safe TCP scan)                         | Authenticated |
+| **`/api/scans/:id`**    | DELETE     | Delete a single scan                                     | Authenticated |
+| **`/api/scans`**        | DELETE     | Delete **all** scans for the user                        | Authenticated |
+| **`/api/scans/count`**  | GET        | Get total scan count for dashboard                       | Authenticated |
+
 
 ---
 
